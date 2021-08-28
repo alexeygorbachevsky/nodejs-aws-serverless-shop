@@ -1,0 +1,86 @@
+---
+swagger: "2.0"
+info:
+  description: This is a serverless shop API
+  version: 1.0.0
+  title: Serverless Shop API
+  contact:
+    email: alexeygorbachevskiyy@gmail.com
+host: g7r38pbml9.execute-api.eu-west-1.amazonaws.com
+basePath: /dev
+tags:
+- name: product-service
+  description: REST-API documentation
+schemes:
+- https
+paths:
+  /products:
+    get:
+      tags:
+      - product-service
+      summary: searches all products
+      description: You can search for all products in the shop
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+  /products/{productId}:
+    get:
+      tags:
+      - product-service
+      summary: searches all products
+      description: You can search for all products in the shop
+      produces:
+      - application/json
+      parameters:
+      - name: productId
+        in: path
+        description: Numeric ID of the product to get
+        required: true
+        type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          schema:
+            $ref: '#/definitions/Product'
+        "404":
+          description: When product not found
+          schema:
+            $ref: '#/definitions/inline_response_404'
+definitions:
+  Product:
+    type: object
+    required:
+    - count
+    - description
+    - id
+    - price
+    - title
+    properties:
+      id:
+        type: string
+        example: 7567ec4b-b10c-48c5-9345-fc73c48a80a3
+      title:
+        type: string
+        example: The Pilgrim's Progress
+      count:
+        type: number
+        example: 10.0
+      price:
+        type: number
+        example: 200.0
+      description:
+        type: number
+        example: Some description
+  inline_response_404:
+    type: object
+    properties:
+      message:
+        type: string
+        example: Product not found
