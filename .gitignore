@@ -1,0 +1,11 @@
+.idea
+.vscode
+node_modules
+*/node_modules
+*/.env.local
+
+# Serverless directories
+*/.serverless
+
+# Webpack directories
+*/.webpack
