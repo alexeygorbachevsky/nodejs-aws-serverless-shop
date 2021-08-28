@@ -13,7 +13,9 @@
     "test": "jest",
     "build": "tsc",
     "local-invoke:getProductList": "serverless invoke local --function getProductList",
-    "local-invoke:getProductById": "serverless invoke local --path src/tests/localInvoke.json  -f getProductById"
+    "local-invoke:getProductById": "serverless invoke local --path src/tests/localInvoke.json  -f getProductById",
+    "invoke:getProductList": "serverless invoke --function getProductList",
+    "invoke:getProductById": "serverless invoke --path src/tests/localInvoke.json  -f getProductById"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.73",
