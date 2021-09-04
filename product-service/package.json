@@ -1,0 +1,44 @@
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "description": "Product Service created API Gateway and Lambdas",
+  "main": "handler.js",
+  "scripts": {
+    "deploy": "sls deploy",
+    "deploy:dev": "sls deploy --stage dev",
+    "deploy:prod": "sls deploy --stage prod",
+    "package-build": "sls package",
+    "remove:dev-stack": "sls remove --stage dev --region eu-west-1",
+    "remove:prod-stack": "sls remove --stage prod --region eu-west-1",
+    "test": "jest",
+    "build": "tsc",
+    "local-invoke:getProductList": "serverless invoke local --function getProductList",
+    "local-invoke:getProductById": "serverless invoke local --path src/tests/localInvoke.json  -f getProductById",
+    "invoke:getProductList": "serverless invoke --function getProductList",
+    "invoke:getProductById": "serverless invoke --path src/tests/localInvoke.json  -f getProductById"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.73",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^10.17.56",
+    "@types/pg": "^7.14.11",
+    "@types/serverless": "^1.78.23",
+    "@types/uuid": "^8.3.0",
+    "dotenv": "^8.2.0",
+    "fork-ts-checker-webpack-plugin": "^3.0.1",
+    "jest": "^27.0.0",
+    "jest-config": "^27.0.6",
+    "serverless-webpack": "^5.4.0",
+    "ts-jest": "^27.0.5",
+    "ts-loader": "^5.3.3",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.2.4",
+    "webpack": "^4.29.0",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "author": "Alexey Gorbachevskiy",
+  "license": "MIT",
+  "dependencies": {
+    "winston": "^3.3.3"
+  }
+}
