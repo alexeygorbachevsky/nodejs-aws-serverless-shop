@@ -20,16 +20,28 @@ class ProductService implements ProductServiceInterface {
     async createProduct(productService: Omit<ProductInterface, "id">) {
         const {title, price, description, count} = productService;
 
-        const query = `
-        WITH product as (
-        insert into product (title, price, description) values
-        (${title}, ${price}, ${description}) 
-        returning id, title)
-        insert into stock (product_id, count) values
-        ((select product.id from product where product.title = ${title}), ${count}); 
-    `;
-        const result = await invoke(query);
-        return result?.rows[0];
+        const tempResult = await invoke(`
+        INSERT INTO product (title,price, description)
+        VALUES ('${title}', ${price}, '${description}')  RETURNING *`);
+
+        const createdProduct = tempResult?.rows[0]
+
+        if (!createdProduct) {
+            //    TODO
+        }
+
+        const result = await invoke(`
+        INSERT INTO stock (product_id, count)
+        VALUES ('${createdProduct.id}', ${count}) RETURNING *;
+        `);
+        const createdStock = result?.rows[0]
+
+        if (!createdStock) {
+            //    TODO
+        }
+        console.log("tempResult", tempResult);
+        console.log("result", result);
+        return {...createdProduct, count: createdStock.count};
     }
 }
 

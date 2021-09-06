@@ -5,7 +5,6 @@ import {logger} from "../helpers/logger";
 
 
 const invoke = async (queryText: string) => {
-    console.log("options", JSON.stringify(options))
     const client = new Client(options)
     await client.connect();
 

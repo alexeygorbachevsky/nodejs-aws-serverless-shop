@@ -1,8 +1,8 @@
 {
   "body": {
     "title": "Test",
-    "price": "Test",
-    "count": "Test",
+    "price": 200,
+    "count": 3,
     "description": "Test"
   }
 }
