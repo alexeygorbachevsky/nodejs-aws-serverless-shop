@@ -20,10 +20,18 @@ service: product-service
 # Check out our docs for more details
 frameworkVersion: '2'
 
+useDotenv: true
+
 provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
+  environment:
+    PG_HOST: ${env:PG_HOST}
+    PG_DATABASE: ${env:PG_DATABASE}
+    PG_PORT: ${env:PG_PORT}
+    PG_USER: ${env:PG_USER}
+    PG_PASSWORD: ${env:PG_PASSWORD}
 
 # you can overwrite defaults here
 #  stage: dev
@@ -53,10 +61,6 @@ custom:
 #            - "Ref" : "ServerlessDeploymentBucket"
 #            - "/*"
 
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
 # you can add packaging information here
 package:
   individually: true
@@ -85,6 +89,16 @@ functions:
             parameters:
               paths:
                 productId: true
+  createProduct:
+    handler: handler.createProduct
+    events:
+      - http:
+          path: products
+          method: post
+          cors: true
+          request:
+              schema:
+                application/json: ${file(src/schemas/createProductSchema.json)}
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
