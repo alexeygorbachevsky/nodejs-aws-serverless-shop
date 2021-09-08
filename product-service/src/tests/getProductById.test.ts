@@ -1,5 +1,5 @@
-import {ProductService} from "../services/productService";
-import {getProductById} from "../../handler";
+import {ProductService} from "./inMemoryProductService";
+import {getProductById} from "./testHandlers";
 
 describe('getProductById lambda handler', () => {
 

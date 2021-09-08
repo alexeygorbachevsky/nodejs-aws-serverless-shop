@@ -6,15 +6,18 @@ export const createProductHandler = (productService: ProductServiceInterface) =>
     try {
         logger.logRequest(`Incoming event: ${JSON.stringify(event)}`);
 
-        const product = await productService.createProduct(event.body);
+        const body = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+
+        const product = await productService.createProduct(body);
 
         logger.logRequest(`Result is: ${JSON.stringify(product)}`);
 
         if (product) {
-            return successResponse({product});
+            return successResponse({product}, 201);
         }
 
-        return successResponse({message: "Product not found"}, 404);
+        const error=new Error("Product was not created")
+        return errorResponse(error);
 
 
     } catch (err) {

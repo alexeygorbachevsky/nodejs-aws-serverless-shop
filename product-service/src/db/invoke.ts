@@ -11,8 +11,9 @@ const invoke = async (queryText: string) => {
     let result;
     try {
         result = await client.query(queryText);
-    } catch ({message}) {
-        logger.logError(message || "Error during database request executing")
+    } catch (err) {
+        const message = err?.message || "Error during database request executing"
+        logger.logError(message);
     } finally {
         await client.end();
     }

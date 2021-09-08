@@ -1,5 +1,5 @@
 import {ProductInterface} from '../types/products';
-import products from './productList.json';
+import products from '../services/productList.json';
 
 export interface ProductServiceInterface {
     getProductList: () => Promise<ProductInterface[]>,

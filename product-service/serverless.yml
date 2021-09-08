@@ -97,8 +97,11 @@ functions:
           method: post
           cors: true
           request:
-              schema:
-                application/json: ${file(src/schemas/createProductSchema.json)}
+              schemas:
+                application/json:
+                  schema: ${file(src/schemas/createProductSchema.json)}
+                  name: createProductSchema
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -140,7 +143,16 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-#resources:
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId: ${env:REST_API_ID}
 #  Resources:
 #    NewResource:
 #      Type: AWS::S3::Bucket
