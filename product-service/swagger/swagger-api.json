@@ -42,6 +42,34 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "product-service"
+        ],
+        "summary": "Create new product",
+        "description": "You can create new product",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "product",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreateProductSchema"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Product is created status",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Product"
+              }
+            }
+          }
+        }
       }
     },
     "/products/{productId}": {
@@ -97,7 +125,7 @@
         },
         "title": {
           "type": "string",
-          "example": "The Pilgrim's Progress"
+          "example": "Test title"
         },
         "count": {
           "type": "number",
@@ -108,7 +136,34 @@
           "example": 200
         },
         "description": {
+          "type": "string",
+          "example": "Some description"
+        }
+      }
+    },
+    "CreateProductSchema": {
+      "type": "object",
+      "required": [
+        "count",
+        "description",
+        "price",
+        "title"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "Test title"
+        },
+        "count": {
           "type": "number",
+          "example": 10
+        },
+        "price": {
+          "type": "number",
+          "example": 200
+        },
+        "description": {
+          "type": "string",
           "example": "Some description"
         }
       }

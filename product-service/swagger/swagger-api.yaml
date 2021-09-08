@@ -30,6 +30,24 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Product'
+    post:
+      tags:
+      - product-service
+      summary: Create new product
+      description: You can create new product
+      parameters:
+      - in: body
+        name: product
+        required: false
+        schema:
+          $ref: '#/definitions/CreateProductSchema'
+      responses:
+        "201":
+          description: Product is created status
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
   /products/{productId}:
     get:
       tags:
@@ -68,7 +86,7 @@ definitions:
         example: 7567ec4b-b10c-48c5-9345-fc73c48a80a3
       title:
         type: string
-        example: The Pilgrim's Progress
+        example: Test title
       count:
         type: number
         example: 10.0
@@ -76,7 +94,27 @@ definitions:
         type: number
         example: 200.0
       description:
+        type: string
+        example: Some description
+  CreateProductSchema:
+    type: object
+    required:
+    - count
+    - description
+    - price
+    - title
+    properties:
+      title:
+        type: string
+        example: Test title
+      count:
         type: number
+        example: 10.0
+      price:
+        type: number
+        example: 200.0
+      description:
+        type: string
         example: Some description
   inline_response_404:
     type: object
