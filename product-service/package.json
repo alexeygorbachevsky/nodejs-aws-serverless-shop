@@ -13,9 +13,11 @@
     "test": "jest",
     "build": "tsc",
     "local-invoke:getProductList": "serverless invoke local --function getProductList",
-    "local-invoke:getProductById": "serverless invoke local --path src/tests/localInvoke.json  -f getProductById",
+    "local-invoke:getProductById": "serverless invoke local --path src/localInvoke/localInvoke.json  -f getProductById",
+    "local-invoke:createProduct": "serverless invoke local --path src/localInvoke/createProduct.json  -f createProduct",
     "invoke:getProductList": "serverless invoke --function getProductList",
-    "invoke:getProductById": "serverless invoke --path src/tests/localInvoke.json  -f getProductById"
+    "invoke:getProductById": "serverless invoke --path src/localInvoke/getProdictById.json  -f getProductById",
+    "invoke:createProduct": "serverless invoke --path src/localInvoke/createProduct.json  -f createProduct"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.73",
@@ -39,6 +41,7 @@
   "author": "Alexey Gorbachevskiy",
   "license": "MIT",
   "dependencies": {
+    "pg": "^8.7.1",
     "winston": "^3.3.3"
   }
 }
