@@ -18,12 +18,14 @@
     "outDir": "./build",
     "resolveJsonModule": true,
     "typeRoots": [
-      "product-service/node_modules/@types"
+      "product-service/node_modules/@types",
+      "import-service/node_modules/@types"
     ]
   },
   "exclude": [
     "node_modules",
     "product-service/node_modules",
+    "import-service/node_modules",
     "**/src/tests"
   ]
 }

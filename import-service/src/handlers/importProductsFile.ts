@@ -3,8 +3,11 @@ import {errorResponse, successResponse} from "../helpers/responseBuilder";
 
 export const importProductsFile = ({
                                        s3,
+                                       logger
                                    }: any) => async (event: any) => {
     try {
+        logger.logRequest(`Incoming event - ${JSON.stringify(event)}`);
+
         const catalogName = event.queryStringParameters.name;
         const catalogPath = `uploaded/${catalogName}`;
 

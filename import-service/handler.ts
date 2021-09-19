@@ -12,4 +12,5 @@ export const importFileParser = importFileParserHandler({
 
 export const importProductsFile = importProductsFileHandler({
     s3,
+    logger
 });

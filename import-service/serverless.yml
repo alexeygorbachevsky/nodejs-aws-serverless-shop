@@ -44,13 +44,25 @@ functions:
             parameters:
               querystrings:
                 name: true
-
   importFileParser:
     handler: handler.importFileParser
     events:
       - s3:
-          bucket: node-in-aws-import-service
+          bucket: ${env:IMPORT_BUCKET}
           event: s3:ObjectCreated:*
           rules:
             - prefix: uploaded/
           existing: true
+
+
+
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId: ${env:REST_API_ID}

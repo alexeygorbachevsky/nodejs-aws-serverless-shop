@@ -21,7 +21,7 @@ const errorResponse = (err: Error, statusCode: number = 500): ResponseInterface 
 }
 
 const successResponse = (body: Object, statusCode: number = 200): ResponseInterface => {
-    logger.logRequest(`Lambda successfully invoked`);
+    logger.logRequest(`Lambda successfully invoked with following body: ${JSON.stringify(body)}`);
 
     return {
         statusCode,
