@@ -10,6 +10,7 @@ describe('importProductsFile lambda handler', () => {
     test('should return mocked signed url', async () => {
 
         const expectedResult = "signedUrl";
+
         AWSMock.mock('S3', 'getSignedUrl', expectedResult);
 
         const s3 = new AWS.S3({region: 'eu-west-1'});
@@ -18,8 +19,9 @@ describe('importProductsFile lambda handler', () => {
             s3,
             logger
         });
-        const {body}: any = await importProductsFile({queryStringParameters: {name: "products"}});
+        const {body, statusCode}: any = await importProductsFile({queryStringParameters: {name: "products"}});
 
         expect(JSON.parse(body)).toEqual(expectedResult);
+        expect(JSON.parse(statusCode)).toEqual(200);
     });
 });
