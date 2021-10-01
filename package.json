@@ -11,5 +11,6 @@
     "url": "https://github.com/AlexeyGorbachevskiy/nodejs-aws-serverless-shop"
   },
   "author": "Alexey Gorbachevskiy",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {}
 }
