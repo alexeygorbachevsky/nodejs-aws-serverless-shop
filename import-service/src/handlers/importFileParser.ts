@@ -9,15 +9,14 @@ export const importFileParser = ({
                                  }: any) => async (event: { Records: any[]; }) => {
     logger.logRequest(`Incoming event - ${JSON.stringify(event)}`);
 
-
     const sendToQueue = async (data: any) => {
-        try{
+        try {
             await sqs.sendMessage({
                 QueueUrl: process.env.SQS_URL,
                 MessageBody: JSON.stringify(data),
             }).promise();
             logger.logRequest(`Message was sent to SQS: ${JSON.stringify(data)}`);
-        } catch(error){
+        } catch (error) {
             logger.logRequest(`Error for send to SQS: ${JSON.stringify(error)}`);
         }
     }
@@ -33,20 +32,6 @@ export const importFileParser = ({
                 .on('data', async (data: any) => {
                     logger.logRequest(`Data - ${JSON.stringify(data)}`);
                     await sendToQueue(data);
-                    // await new Promise((res, rej) => {
-                    //     sqs.sendMessage({
-                    //         QueueUrl: process.env.SQS_URL,
-                    //         MessageBody: JSON.stringify(data),
-                    //     }, (error: any, data: any) => {
-                    //         if (error) {
-                    //             logger.logRequest(`Error for send to SQS: ${error}`);
-                    //             rej();
-                    //         } else {
-                    //             logger.logRequest(`Message was sent to SQS: ${data}`);
-                    //             res();
-                    //         }
-                    //     })
-                    // })
                 })
                 .on('end', async () => {
                     logger.logRequest(`Copy from ${IMPORT_BUCKET}/${record.s3.object.key}`);
@@ -72,6 +57,5 @@ export const importFileParser = ({
                     reject();
                 })
         });
-
     }
 }

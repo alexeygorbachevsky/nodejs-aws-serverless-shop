@@ -10,13 +10,18 @@ const sendNotification = async (product: ProductInterface) => {
 
     try {
         await sns.publish({
-            Subject: 'New product created',
+            Subject: 'Products were created',
             Message: JSON.stringify(product),
             MessageAttributes: {
                 title: {
                     DataType: 'String',
                     StringValue: product.title
-                }
+                },
+                price: {
+                    DataType: 'Number',
+                    StringValue: String(product.price),
+                },
+
             },
             TopicArn: process.env.SNS_ARN
         }).promise();
@@ -24,7 +29,7 @@ const sendNotification = async (product: ProductInterface) => {
         logger.logRequest(`SNS notification was sent for ${product.title}`);
 
     } catch (error) {
-        logger.logError(`Failed to send SNS notification: ${error}`);
+        logger.logError(`Failed to send SNS notification: ${JSON.stringify(error)}`);
     }
 
 }
@@ -43,7 +48,7 @@ export const catalogBatchProcessHandler =
                 logger.logRequest(`Created product: ${JSON.stringify(product)}`);
 
                 if (product.id) {
-                    await sendNotification(product)
+                    await sendNotification(product);
                 }
             }
 
