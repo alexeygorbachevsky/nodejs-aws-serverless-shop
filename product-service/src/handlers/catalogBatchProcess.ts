@@ -1,12 +1,8 @@
-import {SNS} from 'aws-sdk';
-
 import {ProductInterface, ProductServiceInterface} from "../types/products";
 import {logger} from '../helpers/logger';
 
 
-const sns = new SNS();
-
-const sendNotification = async (product: ProductInterface) => {
+const sendNotification = async (product: ProductInterface, sns: any) => {
 
     try {
         await sns.publish({
@@ -35,7 +31,7 @@ const sendNotification = async (product: ProductInterface) => {
 }
 
 export const catalogBatchProcessHandler =
-    (productService: ProductServiceInterface) => async (event: { Records: any; body: any; }, _context: any) => {
+    (productService: ProductServiceInterface, sns: any) => async (event: { Records: any }, _context: any) => {
         logger.logRequest(`Incoming event: ${JSON.stringify(event)}`);
         try {
             for (const record of event.Records) {
@@ -48,7 +44,7 @@ export const catalogBatchProcessHandler =
                 logger.logRequest(`Created product: ${JSON.stringify(product)}`);
 
                 if (product.id) {
-                    await sendNotification(product);
+                    await sendNotification(product, sns);
                 }
             }
 
