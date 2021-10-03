@@ -41,6 +41,7 @@
   "author": "Alexey Gorbachevskiy",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.999.0",
     "pg": "^8.7.1",
     "winston": "^3.3.3"
   }

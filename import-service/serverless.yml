@@ -9,6 +9,7 @@ provider:
   region: eu-west-1
   environment:
     IMPORT_BUCKET: ${env:IMPORT_BUCKET}
+    SQS_URL: ${cf:product-service-dev.sqsUrl}
 
   iamRoleStatements:
     - Effect: "Allow"
@@ -20,6 +21,10 @@ provider:
         - "s3:*"
       Resource:
         - "arn:aws:s3:::node-in-aws-import-service/*"
+    - Effect: "Allow"
+      Action: "sqs:*"
+      Resource: ${cf:product-service-dev.sqsArn}
+#        - Fn::GetAtt: ['${cf:product-service-dev.sqsArn}', Arn]
 
 plugins:
   - serverless-webpack

@@ -32,6 +32,17 @@ provider:
     PG_PORT: ${env:PG_PORT}
     PG_USER: ${env:PG_USER}
     PG_PASSWORD: ${env:PG_PASSWORD}
+    SNS_ARN: !Ref createProductTopic
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: "sqs:*"
+      Resource:
+        - Fn::GetAtt: [catalogItemsQueue, Arn]
+    - Effect: "Allow"
+      Action: "sns:*"
+      Resource:
+        Ref: createProductTopic
 
 # you can overwrite defaults here
 #  stage: dev
@@ -101,6 +112,13 @@ functions:
                 application/json:
                   schema: ${file(src/schemas/createProductSchema.json)}
                   name: createProductSchema
+  catalogBatchProcess:
+    handler: handler.catalogBatchProcess
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+            Fn::GetAtt: [catalogItemsQueue, Arn]
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -145,6 +163,28 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
   Resources:
+    catalogItemsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: csv-sqs
+        ReceiveMessageWaitTimeSeconds: 20
+
+    createProductTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: notify-about-products
+
+    createProductTopicSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: alexeygorbachevskiyy@gmail.com
+        Protocol: email
+#        FilterPolicy:
+#          title:
+#            - "BMW 4-series"
+        TopicArn:
+          Ref: createProductTopic
+
     GatewayResponseDefault4XX:
       Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:
@@ -162,3 +202,10 @@ resources:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+  Outputs:
+    sqsUrl:
+      Value: !Ref catalogItemsQueue
+    sqsArn:
+      Value:
+        Fn::GetAtt : [catalogItemsQueue, Arn]
