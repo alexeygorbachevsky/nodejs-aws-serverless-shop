@@ -8,7 +8,7 @@ export const basicAuthorizer = ({logger}: any) => async (event: APIGatewayAuthor
 
     if (event.type != 'TOKEN') {
         logger.logError(`Authorization error: Event type is not a "TOKEN", but: ${event.type}`);
-        return callback(`Unauthorized. Authorization header is not provided.`);
+        return callback("Unauthorized");
     }
 
     try {
