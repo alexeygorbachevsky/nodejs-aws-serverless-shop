@@ -32,9 +32,20 @@ provider:
     PG_PORT: ${env:PG_PORT}
     PG_USER: ${env:PG_USER}
     PG_PASSWORD: ${env:PG_PASSWORD}
+    SNS_ARN: !Ref createProductTopic
 
-# you can overwrite defaults here
-#  stage: dev
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: "sqs:*"
+      Resource:
+        - Fn::GetAtt: [catalogItemsQueue, Arn]
+    - Effect: "Allow"
+      Action: "sns:*"
+      Resource:
+        Ref: createProductTopic
+
+  # you can overwrite defaults here
+  #  stage: dev
   region: eu-west-1
 
 plugins:
@@ -97,10 +108,19 @@ functions:
           method: post
           cors: true
           request:
-              schemas:
-                application/json:
-                  schema: ${file(src/schemas/createProductSchema.json)}
-                  name: createProductSchema
+            schemas:
+              application/json:
+                schema: ${file(src/schemas/createProductSchema.json)}
+                name: createProductSchema
+  catalogBatchProcess:
+    handler: handler.catalogBatchProcess
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+            Fn::GetAtt:
+              - catalogItemsQueue
+              - Arn
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -145,6 +165,61 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
   Resources:
+    catalogItemsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: csv-sqs
+        ReceiveMessageWaitTimeSeconds: 20
+
+    createProductTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: notify-about-products
+
+    createProductTopicSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: alexeygorbachevskiyy@gmail.com
+        Protocol: email
+        #        FilterPolicy: {
+        #          "price": [{"numeric": [">=",200]}],
+        #          "title": [{"anything-but": ["Filter Policy Title"]}],
+        #        }
+        FilterPolicy:
+          price:
+            - numeric:
+                - ">="
+                - 200
+          title:
+            - anything-but:
+                - "Filter Policy Title"
+        TopicArn:
+          Ref: createProductTopic
+
+    createProductTopicSubscription2:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: alexeygorbachevskiyy@mail.ru
+        Protocol: email
+        FilterPolicy: {
+          "price": [{"numeric": ["<",200]}]
+        }
+        TopicArn:
+          Ref: createProductTopic
+
+    #   Currently, we can't use SNS filters to apply OR logic across different message attributes so third subscription is created for this title
+    #    https://docs.aws.amazon.com/sns/latest/dg/and-or-logic.html
+    createProductTopicSubscription3:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: testAwsMai9837I@yopmail.com
+        Protocol: email
+        FilterPolicy: {
+          "title": ["Filter Policy Title"]
+        }
+        TopicArn:
+          Ref: createProductTopic
+
     GatewayResponseDefault4XX:
       Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:
@@ -153,12 +228,19 @@ resources:
           gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
         ResponseType: DEFAULT_4XX
         RestApiId: ${env:REST_API_ID}
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+  #  Resources:
+  #    NewResource:
+  #      Type: AWS::S3::Bucket
+  #      Properties:
+  #        BucketName: my-new-bucket
+  #  Outputs:
+  #     NewOutput:
+  #       Description: "Description for the output"
+  #       Value: "Some output value"
+
+  Outputs:
+    sqsUrl:
+      Value: !Ref catalogItemsQueue
+    sqsArn:
+      Value:
+        Fn::GetAtt: [catalogItemsQueue, Arn]

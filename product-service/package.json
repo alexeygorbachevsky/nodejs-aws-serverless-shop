@@ -26,6 +26,7 @@
     "@types/pg": "^7.14.11",
     "@types/serverless": "^1.78.23",
     "@types/uuid": "^8.3.0",
+    "aws-sdk-mock": "^5.4.0",
     "dotenv": "^8.2.0",
     "fork-ts-checker-webpack-plugin": "^3.0.1",
     "jest": "^27.0.0",
@@ -41,6 +42,7 @@
   "author": "Alexey Gorbachevskiy",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.999.0",
     "pg": "^8.7.1",
     "winston": "^3.3.3"
   }
