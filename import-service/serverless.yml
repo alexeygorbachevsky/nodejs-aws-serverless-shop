@@ -45,6 +45,12 @@ functions:
           path: import
           method: get
           cors: true
+          authorizer:
+            name: basicAuthorizer
+            arn: "${cf:authorization-service-dev.basicAuthorizerArn}"
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            type: token
           request:
             parameters:
               querystrings:
@@ -69,5 +75,24 @@ resources:
         ResponseParameters:
           gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
           gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Credentials: "'true'"
         ResponseType: DEFAULT_4XX
-        RestApiId: ${env:REST_API_ID}
+        RestApiId: !Ref ApiGatewayRestApi
+    GatewayResponseAccessDeied:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Credentials: "'true'"
+        ResponseType: ACCESS_DENIED
+        RestApiId: !Ref ApiGatewayRestApi
+    GatewayResponseUnauthorized:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Credentials: "'true'"
+        ResponseType: UNAUTHORIZED
+        RestApiId: !Ref ApiGatewayRestApi
