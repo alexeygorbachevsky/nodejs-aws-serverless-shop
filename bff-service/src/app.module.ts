@@ -7,7 +7,7 @@ import { CacheMiddleware } from './middlewares';
 @Module({
   imports: [ConfigModule.forRoot()],
   controllers: [AppController],
-  providers: [CacheService, ProxyService],
+  providers: [ProxyService, CacheService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

@@ -16,7 +16,7 @@ export class AppController {
       .map((path) => `/${path}/`);
   }
 
-  @All()
+  @All("*")
   async proxyAll(@Req() req: Request, @Res() res: Response) {
     const pathParts = req.url.split('?')[0].split('/');
     const sourceUrl = [process.env[pathParts[1]], ...pathParts.slice(2)].join(

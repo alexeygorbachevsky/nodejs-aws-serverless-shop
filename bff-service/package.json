@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "eb:init": "eb init --platform node.js --region eu-west-1",
     "eb:create": "eb create bff-service-dev --single --cname alexeygorbachevskiy-bff-service-dev",
+    "eb:deploy": "eb deploy bff-service-dev",
     "eb:terminate": "eb terminate"
   },
   "dependencies": {

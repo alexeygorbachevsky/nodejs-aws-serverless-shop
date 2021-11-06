@@ -7,7 +7,6 @@ export class ProxyService {
     const responseHeaders = headers['authorization']
       ? { Authorization: headers['authorization'] }
       : {};
-    // API Gateway returns 403 because axios request always send a body
     if (method === 'GET') {
       return axios.get(url, {
         params,
