@@ -1,12 +1,13 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { CacheService, ProxyService } from './services';
 import { CacheMiddleware } from './middlewares';
 
 @Module({
-  imports: [],
+  imports: [ConfigModule.forRoot()],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [CacheService, ProxyService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
